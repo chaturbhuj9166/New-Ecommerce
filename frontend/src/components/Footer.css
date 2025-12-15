@@ -1,0 +1,27 @@
+.footer {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  background-color: #222; /* dark background */
+  color: #fff; /* white text */
+  padding: 40px 20px;
+  flex-wrap: wrap; /* makes it responsive */
+}
+
+.footer div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 150px; /* ensures spacing */
+}
+
+.footer div p {
+  margin: 0;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.footer div p:hover {
+  color: #f0a500; /* hover color */
+}
