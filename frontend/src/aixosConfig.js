@@ -1,8 +1,12 @@
-import axios from "axios"
-import aixos from "axios"
-const instance =axios.create({
-    baseURL:"http://localhost:3000",
+import axios from "axios";
 
-    // withCredentials:true,
+const baseURL = import.meta.env.PROD
+  ? import.meta.env.VITE_API_PROD
+  : import.meta.env.VITE_BASEURL;
+
+const instance = axios.create({
+  baseURL,
+  withCredentials: true
 });
-export default instance
+
+export default instance;
