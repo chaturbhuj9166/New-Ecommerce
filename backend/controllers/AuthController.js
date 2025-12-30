@@ -90,9 +90,15 @@ export async function loginUsers(req, res) {
 }
 export async function logoutUsers(req, res) {
     try {
-        return res.status(200).json({ message: "Logout success" });
-    }
+        res.cookie("auth_Token", " "), {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            maxAge: -1,  // any negative time
+        };
+        return res.status(200).json({ message: "user Logged out" });
 
+    }
     catch (error) {
         return res.status(500).json({ message: error.message });
     }

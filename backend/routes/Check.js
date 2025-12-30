@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { checkForlogin } from "../middlewares/MiddlewarresAuth.js";
+import { checkForlogin } from "../middlewares/auth.js";
 
 const checkRouter = Router();
 

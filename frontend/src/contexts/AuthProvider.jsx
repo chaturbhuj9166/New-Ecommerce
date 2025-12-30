@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
+import instance from "../aixosConfig";
 
 const authContext = createContext();
 
@@ -7,8 +9,19 @@ function AuthProvider({ children }) {
     const [loggedinUser, setLoggedinUser] = useState(null)
 
 
+useEffect(()=>{
+ checkIsLoggedIn()
+},[])
+
+ async function checkIsLoggedIn() {
+    const response =await instance.get("/check/login?referer=user",{withCredentials:true})
+    console.log(response);
+    if(response.status===200)setIsLoggedIn(true)
+    
+}
+
     return (
-        <authContext.Provider value={{ isLoggedIn, loggedinUser }}>
+        <authContext.Provider value={{ isLoggedIn, loggedinUser ,setIsLoggedIn,checkIsLoggedIn}}>
             {children}
         </authContext.Provider>
     )

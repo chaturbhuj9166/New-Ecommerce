@@ -2,9 +2,11 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
+import { useAuth } from "../contexts/AuthProvider";
 
 function Login() {
   const navigate = useNavigate();
+   const {isloggedIn,setIsLoggedIn}=useAuth()
 
   const [data, setData] = useState({
     email: "",
@@ -26,10 +28,14 @@ function Login() {
         { withCredentials: true }
       );
 
+     
+      
+
       console.log("Login success", response.data);
       alert("Logged in successfully");
-
+      setIsLoggedIn(true)
       navigate("/");
+      
     } catch (error) {
       console.log("Login error", error);
       alert("Invalid email or password");

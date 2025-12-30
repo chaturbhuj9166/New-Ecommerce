@@ -7,6 +7,10 @@ import authRouter from "./routes/Auth.js";
 import cors from "cors";
 import adminRouter from "./routes/Admin.js";
 import checkRouter from "./routes/Check.js";
+import cartRouter from "./routes/cart.js";
+import cookieParser from "cookie-parser";
+
+
 const app = express();
 app.use(express.json());
 
@@ -26,6 +30,7 @@ app.use("/admin",adminRouter)
 
 app.use("/check", checkRouter)
 app.use("/uploads", express.static("uploads"));
+app.use("/cart",cartRouter)
 
 app.listen(3000, () => console.log("Server started at port 3000"));
 

@@ -1,18 +1,39 @@
 import { PiCurrencyInrLight } from "react-icons/pi";
-import "./Product.css";
+import { Link } from "react-router-dom";
 
+const trimContent = (text, maxLength = 30) => {
+  if (!text) return "";
+  return text.length > maxLength
+    ? text.substring(0, maxLength) + "..."
+    : text;
+};
 
 function ProductCard({ product }) {
   return (
     <div className="productCard">
-      <img src={`http://localhost:3000/${product.image}`} alt={product.name} />
+      
+     
+      <div className="productImage">
+        <Link to={"/product/" + product.slug}>
+          <img
+            src={`http://localhost:3000/${product.image}`}
+            alt={product.name}
+          />
+        </Link>
+      </div>
 
       <div className="content">
-        <h3>{product.name}</h3>
+        
+        {/* Product Name */}
+        <h3>
+           <Link to={"/product/" + product.slug}>
+            {trimContent(product.name, 22)}
+          </Link>
+        </h3>
 
+        {/* Price */}
         <p>
           <PiCurrencyInrLight />
-
           {product.discountedPrice ? (
             <>
               <del>{product.originalPrice}</del>
@@ -22,6 +43,8 @@ function ProductCard({ product }) {
             <strong>{product.originalPrice}</strong>
           )}
         </p>
+
+        
       </div>
     </div>
   );
