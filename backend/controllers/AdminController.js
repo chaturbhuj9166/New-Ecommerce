@@ -1,5 +1,4 @@
 import Auth from '../models/Authmodel.js';
-import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import "dotenv/config";
@@ -9,6 +8,8 @@ export async function loginAdmin(req, res) {
         const data = req.body;
 
         console.log(data);
+        console.log(Auth);
+        
 
         const user = await Auth.findOne({ email: data.email });
         if (!user) return res.status(404).json({ message: "Email not found" });
@@ -17,7 +18,7 @@ export async function loginAdmin(req, res) {
             return res.status(401).json({ message: "You are not an Admin" });
 
         const doesPasswordMatch = await bcrypt.compare(data.password, user.password);
-        if (!doesPasswordMatch) return res.status(404).json({ message: "Invalid Credentials" });
+        if (!doesPasswordMatch) return res.status(401).json({ message: "Invalid Credentials" });
 
         const admin_token = jwt.sign(
             { id: user._id, role: user.role },
@@ -57,4 +58,3 @@ export async function logoutAdmin(req, res) {
 export async function updateAdmin(req, res) {
     return res.status(200).json({ message: "Update Admin API ready" });
 }
-

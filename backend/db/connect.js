@@ -1,16 +1,16 @@
-// import mongodb from 'mongodb'
-import mongoose from "mongoose"
-import "dotenv/config"
+import "dotenv/config";
+import mongoose from "mongoose";
+
 
 async function connectToDB() {
     try {
-        await mongoose.connect(process.env.MONGO_URL)
-        console.log("rohit");
+        await mongoose.connect(process.env.MONGO_URL);
+
+        console.log("Connected to MongoDB successfully");
         
     }
     catch (error) {
-        console.log("error connecting to database:", error)
+        console.log("Error connecting to database:", error);
     }
 }
-
-export default connectToDB
+export default connectToDB;

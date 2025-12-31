@@ -1,48 +1,49 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { MdLogout } from "react-icons/md";
-import { IoCartOutline } from "react-icons/io5";
-import { GrUserAdmin } from "react-icons/gr";
-import "./header.css";
-import instance from '../aixosConfig';
+import { Link, useNavigate } from "react-router-dom";
+import { IoMdLogOut } from "react-icons/io";
+import { FaCartPlus } from "react-icons/fa";
+import { useAuth } from "../contexts/AuthProvider";
+import { useCart } from "../contexts/CartProvider";
 
 function Header() {
-const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { isLoggedIn, logout } = useAuth(); // ✅ logout from context
+  const { cartItems } = useCart();
 
-
-  async function handleLogout() {
-   let respons=await instance.post("user/logout")
- 
-   console.log(respons.data.message);
-   
-   
-    navigate("/login")
+  function handleLogout() {
+    logout();          // ✅ no localStorage
+    navigate("/login");
   }
 
-
   return (
-    <div className='header'>
+    <div className="header">
       <div className="logo">
-     <Link to="/"><h1>E-Commerce</h1></Link>
-
+        <h1>
+          <Link to="/">E-commerce</Link>
+        </h1>
       </div>
 
-      <div className='list'>
-       
-        <Link to="/login">Login</Link>
-        <Link to="/register">Register</Link>
+      <div className="list">
+        {/* ✅ CART */}
+        <Link to="/cart" className="cart-link">
+          <FaCartPlus className="cartIcon" />
+          <span className="cart-text">Cart</span>
 
-        <Link to="/cart">
-         
-          Cart
-      <IoCartOutline />
+          {/* ✅ Cart count */}
+          <span className="cart-badge">{cartItems.length}</span>
         </Link>
 
-        <Link to="/AdminLogin">
-    
-        Admin
-            <GrUserAdmin /></Link>
-       <span onClick={handleLogout}> <MdLogout /></span>
+        <Link to="/admin/login">Admin</Link>
+
+        {isLoggedIn ? (
+          <span className="logoutIcon" onClick={handleLogout}>
+            Logout <IoMdLogOut />
+          </span>
+        ) : (
+          <>
+            <Link to="/login">Login</Link>
+            <Link to="/register">Register</Link>
+          </>
+        )}
       </div>
     </div>
   );

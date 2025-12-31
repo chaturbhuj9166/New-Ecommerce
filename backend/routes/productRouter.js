@@ -1,5 +1,5 @@
 import Router from "express";
-import { addProduct, deleteProduct, getProduct, updateProduct,checkslug } from "../controllers/product.js";
+import { addProduct, deleteProduct, getProduct, updateProduct, checkSlug,getProductBySlug} from "../controllers/product.js"
 
 import multer from "multer";
 import path from "path";
@@ -22,5 +22,7 @@ productRouter.get("/", getProduct)
 productRouter.post("/", upload.single("image"), addProduct)
 productRouter.put("/:id", updateProduct)
 productRouter.delete("/:id", deleteProduct)
-productRouter.get("/checkSlug/:slug",checkslug)
+productRouter.get('/checkSlug/:slug', checkSlug)
+productRouter.get("/slug/:slug", getProductBySlug);
+
 export default productRouter

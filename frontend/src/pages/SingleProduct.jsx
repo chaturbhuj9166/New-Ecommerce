@@ -1,97 +1,100 @@
 import React, { useEffect, useState } from "react";
-import instance from "../aixosConfig";
-import { useParams } from "react-router-dom";
+import instance from "../axiosConfig";
+import { useNavigate, useParams } from "react-router-dom";
 import { PiCurrencyInrLight } from "react-icons/pi";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthProvider";
-import Cart from "./Cart";
 
 const SingleProduct = () => {
-    const navigate = useNavigate()
   const { slug } = useParams();
+  const navigate = useNavigate();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const {isloggedIn}=useAuth()
 
-  const getSingleData = async () => {
+  const { isLoggedIn } = useAuth();
+
+
+  async function getSingleData() {
     try {
-      const response = await instance.get("/product");
-      const foundProduct = response.data.find(
-        (item) => item.slug === slug
-      );
-      setProduct(foundProduct || null);
-    } catch (error) {
-      console.error(error.message);
-      setProduct(null);
-    } finally {
+      const response = await instance.get("/product/slug/" + slug);
+      setProduct(response.data);
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
       setLoading(false);
     }
-  };
-//   function handleToCard() {
-//     const user=localStorage.getItem("auth_Token")
-//     if(user){
-       
-//         navigate("/cart")
-//     }else{
-//       alert("User not login forst login")
-//       navigate("/register")
-//   }
-// }
-
-async function AddtoCart(productId) {
- if(!isloggedIn)navigate("/login")
-  else{
-const response =await instance.post(
-  "/cart/add",
-  {productId:productId,quantity:1},
-  {withCredentials:true}
-);
-console.log(response);
-
-}
-  
-}
-
+  }
 
   useEffect(() => {
-    if (slug) getSingleData();
+    getSingleData();
   }, [slug]);
 
-  if (loading) return <p className="loading">Loading...</p>;
-  if (!product) return <p className="not-found">Product not found</p>;
 
+  async function handleAddToCart(productId) {
+   console.log(isLoggedIn);
+    if (!isLoggedIn) {
+      // alert("Please login first to add product to cart");
+      navigate("/login?nextPage=/product/" + slug);
+      return;
+    }
+
+    try {
+      const response = await instance.post(
+        "/cart/add",
+        { productId, quantity: 1 },
+        { withCredentials: true } 
+      );
+
+     
+      if (response.status === 200 || response.status === 201) {
+        alert("Product added successfully!");
+      }
+
+      console.log(response.data);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to add product!");
+    }
+  }
+
+  // 🔹 Loading / error states
+  if (loading) return <p>Loading...</p>;
+  if (!product) return <p>Product not found</p>;
+
+  // 🔹 UI
   return (
-    <div className="singleProduct">
-      <div className="singleProductContainer">
+    <div className="single-product">
+      <div className="single-product-image">
+        <img
+          src={`${import.meta.env.VITE_BASEURL}/${product.image}`}
+          alt={product.name}
+        />
+      </div>
 
-        <div className="singleProductImage">
-          <img
-            src={`http://localhost:3000/${product.image}`}
-            alt={product.name}
-          />
-        </div>
+      <div className="single-product-details">
+        <h1>{product.name}</h1>
+        <p className="category">{product.category}</p>
 
-        <div className="singleProductDetails">
-          <h1>{product.name}</h1>
+        <p className="price">
+          <PiCurrencyInrLight />
+          {product.discountedPrice ? (
+            <>
+              <del>{product.originalPrice}</del>{" "}
+              <strong>{product.discountedPrice}</strong>
+            </>
+          ) : (
+            <strong>{product.originalPrice}</strong>
+          )}
+        </p>
 
-          <p className="category">{product.category}</p>
+        <p className="description">{product.description}</p>
 
-          <p className="price">
-            <PiCurrencyInrLight />
-            {product.discountedPrice ? (
-              <>
-                <del>{product.originalPrice}</del>
-                <span>{product.discountedPrice}</span>
-              </>
-            ) : (
-              <span>{product.originalPrice}</span>
-            )}
-          </p>
-
-          <p className="description">{product.description}</p>
-        </div>
-  <button onClick={()=>AddtoCart(product_id)}>Add to card</button>
+        <button
+          className="add-to-cart"
+          onClick={() => handleAddToCart(product._id)}
+        >
+          Add to Cart
+        </button>
       </div>
     </div>
   );

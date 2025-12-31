@@ -2,23 +2,16 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import ReCAPTCHA from "react-google-recaptcha";
-import "./Register.css";
+
 
 function Register() {
-
-
-   const [captchaValue, setCaptchaValue] = useState(null);
-
- 
   const [data, setData] = useState({
     name: "",
     phone: "",
     username: "",
     email: "",
     password: "",
-    role:"User"
-
+    role:"user",
   });
 
   const navigate = useNavigate();
@@ -33,7 +26,7 @@ function Register() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/user/register",
+        `${import.meta.env.VITE_BASEURL}/user/register`,
         data
       );
 
@@ -51,10 +44,6 @@ function Register() {
         position: "top-center",
       });
     }
-  }
-   function onChange(value) {
-    setCaptchaValue(value);
-    console.log("Captcha value:", value);
   }
 
   return (
@@ -85,13 +74,7 @@ function Register() {
         <div className="form-group">
           <label>Password</label>
           <input type="password" name="password" value={data.password} onChange={handleChange} required />
-
         </div>
-         
-      <ReCAPTCHA
-        sitekey="6LdCXCksAAAAAEdG2Hn1fYUzc6LMUnwNS-iA4gB8"
-        onChange={onChange}
-      />
 
         <button type="submit">Register</button>
       </form>

@@ -1,51 +1,58 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import First from "./pages/First";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
+import First from "./pages/First.jsx";
+import Home from "./pages/Home.jsx";
+import Login from "./pages/Login.jsx";
 import Register from "./pages/Register";
-import AuthProvider from "./contexts/AuthProvider";
-import AdminHome from "./admin/pages/Home";
-import AdminLogin from "./admin/pages/Login";
-import AddProduct from "./admin/pages/AddProduct";
+import AuthProvider from "./contexts/AuthProvider.jsx";
+import AdminHome from "./admin/pages/Home.jsx";
+import AdminLogin from "./admin/pages/Login.jsx";
+import AddProduct from "./admin/pages/AddProduct.jsx";
 import ProtectedRouters from "./admin/components/ProtectedRouters.jsx";
 import SingleProduct from "./pages/SingleProduct.jsx";
 import Cart from "./pages/Cart.jsx";
+import {CartProvider} from "./contexts/CartProvider.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <First />,
+    element: (
+  
+        <First />
+    
+    ),
     children: [
-      
       { index: true, element: <Home /> },
       { path: "login", element: <Login /> },
+      { path: "cart", element: <Cart /> },
       { path: "register", element: <Register /> },
-    { path: "product/:slug", element: <SingleProduct /> },
-      { path: "AdminLogin", element: <AdminLogin /> },
+      { path: "product/:slug", element: <SingleProduct /> },
+
+      { path: "admin/login", element: <AdminLogin /> },
       { path: "admin/home", element: <AdminHome /> },
-      {path:"cart",element: <Cart />},
 
       {
         path: "admin/AddProduct",
-        element: <AddProduct />
+        element: <AddProduct />,
       },
-
       {
         path: "admin/product/add",
         element: (
           <ProtectedRouters>
             <AddProduct />
           </ProtectedRouters>
-        )
-      }
-    ]
-  }
+        ),
+      },
+    ],
+  },
 ]);
 
 function App() {
   return (
     <AuthProvider>
-      <RouterProvider router={router} />
+      <CartProvider>
+        <RouterProvider router={router} />
+      </CartProvider>
+      
     </AuthProvider>
   );
 }

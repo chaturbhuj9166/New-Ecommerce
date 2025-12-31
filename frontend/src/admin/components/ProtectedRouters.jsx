@@ -1,7 +1,6 @@
 import axios from "axios";
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-// import { checkForlogin } from "../../../../backend/middlewares/middlewaresAuth";
+import  { useEffect } from "react";
+
 
 function ProtectedRouters({ children }) {
 
@@ -12,7 +11,7 @@ function ProtectedRouters({ children }) {
 
     async function checkForlogin() {
         const response = await axios.get(
-            "http://localhost:3000/check/login?referer=admin",
+            `${import.meta.env.VITE_BASEURL}/check/login?referer=admin`,
             { withCredentials: true })
 
         console.log(response)

@@ -1,13 +1,27 @@
-import data from "../data.js";
-import Product from "../models/productmodel.js"
+import Product from "../models/Productmodel.js"
 import multer from "multer";
+
+
+// export async function addProduct(req, res) {
+//     try {
+//         const newRecord = req.body;
+//         newRecord.image = req.file.path.replace(/\\/g, "/");
+//         const newProduct = new Product(newRecord);
+//         await newProduct.save();
+//         return res.status(201).json(newProduct);
+//     } catch (error) {
+//         return res.status(500).json({ message: error.message });
+//     }
+// }
+
 
 
 export async function addProduct(req, res) {
   try {
     const newRecord = req.body;
     if (req.file) {
-      newRecord.image = req.file.path.replace(/\\/g, "/");
+      // Save path relative to /uploads for frontend
+      newRecord.image = `uploads/${req.file.filename}`;
     }
     const newProduct = new Product(newRecord);
     await newProduct.save();
@@ -72,7 +86,7 @@ export async function deleteProduct(req, res) {
     }
 }
 
-export async function checkslug(req,res){ 
+export async function checkSlug(req,res){
   try {
     const {slug}=req.params;
     if(!slug){
@@ -84,10 +98,19 @@ export async function checkslug(req,res){
       return res.status(400).json({message:"Slug already exists. Choose different"})
 
     if(!matchingSlug)
-      return res.status(200).json({message:"slug is availabel"})
+      return res.status(200).json({message:"slug is available"})
   }
   catch(error){
     return  res.status(500).json({message:error.message});
   }
 };
 
+export const getProductBySlug = async (req, res) => {
+  try {
+    const product = await Product.findOne({ slug: req.params.slug });
+    if (!product) return res.status(404).json({ message: "Product not found" });
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

@@ -16,7 +16,7 @@ function ProductCard({ product }) {
       <div className="productImage">
         <Link to={"/product/" + product.slug}>
           <img
-            src={`http://localhost:3000/${product.image}`}
+            src={`${import.meta.env.VITE_BASEURL}/${product.image}`}
             alt={product.name}
           />
         </Link>

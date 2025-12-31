@@ -1,12 +1,12 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./Login.css";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthProvider";
 
 function Login() {
+  const { checkIsLoggedIn } = useAuth();
   const navigate = useNavigate();
-   const {isloggedIn,setIsLoggedIn}=useAuth()
+  const location = useLocation();
 
   const [data, setData] = useState({
     email: "",
@@ -22,51 +22,44 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/user/login",
-        data,
-        { withCredentials: true }
-      );
+      await axios.post(`${import.meta.env.VITE_BASEURL}/user/login`, data, {
+        withCredentials: true,
+      });
+      checkIsLoggedIn();
 
-     
-      
-
-      console.log("Login success", response.data);
-      alert("Logged in successfully");
-      setIsLoggedIn(true)
-      navigate("/");
-      
+      // ✅ go back to product page
+      navigate(location.state?.from || "/");
     } catch (error) {
-      console.log("Login error", error);
       alert("Invalid email or password");
     }
   }
 
   return (
-    <div className="login-box">
-      <h1>Login to your account</h1>
+    <div>
+      <h2>Login</h2>
 
       <form onSubmit={handleSubmit}>
-        <label>Email</label>
         <input
-          type="text"
-          placeholder="Enter your Email"
           name="email"
           value={data.email}
           onChange={handleChange}
+          placeholder="Email"
+          required
         />
 
-        <label>Password</label>
         <input
           type="password"
-          placeholder="Enter password"
           name="password"
           value={data.password}
           onChange={handleChange}
+          placeholder="Password"
+          required
         />
 
-        <button type="submit">Submit</button>
+        <button type="submit">Login</button>
       </form>
+
+      <Link to="/register">Register</Link>
     </div>
   );
 }
