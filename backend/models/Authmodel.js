@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 
 const authSchema = new Schema(
   {
@@ -58,5 +58,5 @@ const authSchema = new Schema(
   { timestamps: true }
 );
 
-const Auth = model("auths", authSchema);
+const Auth = mongoose.models.auths || model("auths", authSchema);
 export default Auth;
